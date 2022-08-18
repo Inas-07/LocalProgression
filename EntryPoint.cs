@@ -1,11 +1,12 @@
 ﻿using BepInEx;
-using BepInEx.IL2CPP;
+//using BepInEx.IL2CPP;
+using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 namespace LocalProgression
 {
     [BepInDependency("dev.gtfomodding.gtfo-api")]
     [BepInDependency("com.dak.MTFO")]
-    [BepInPlugin("Inas.LocalProgression", "LocalProgression", "0.0.1")]
+    [BepInPlugin("Inas.LocalProgression", "LocalProgression", "1.0.0")]
     
     public class EntryPoint: BasePlugin
     {
