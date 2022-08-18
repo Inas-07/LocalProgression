@@ -1,0 +1,44 @@
+﻿<Project>
+
+  <PropertyGroup>
+    <!--<GameFolder>C:\Users\vcc\Desktop\GTFO_Assemblies</GameFolder>-->
+     <GameFolder>G:\SteamLibrary\steamapps\common\GTFO</GameFolder> 
+    <BIELibsFolder>$(GameFolder)\BepInEx\core</BIELibsFolder>
+    <DotnetFolder>$(GameFolder)\dotnet</DotnetFolder>
+    <CorLibsFolder>$(DotnetFolder)\corlib</CorLibsFolder>
+    <InteropFolder>$(GameFolder)\BepInEx\interop</InteropFolder>
+    <PluginsFolder>$(GameFolder)\BepInEx\plugins</PluginsFolder>
+  </PropertyGroup>
+
+  <!-- BepInEx Core libs --> 
+  <ItemGroup>
+    <Reference Include="$(BIELibsFolder)\BepInEx.*.dll" Private="false" />
+    <Reference Include="$(BIELibsFolder)\0Harmony.dll" Private="false" />
+    <Reference Include="$(BIELibsFolder)\*.dll" Private="false" />
+    <!--<Reference Include="$(BIELibsFolder)\UnhollowerRuntimeLib.dll" Private="false" />-->
+
+  </ItemGroup>
+
+  <!-- Mono libs -->
+  <ItemGroup>
+    <Reference Include="$(CorLibsFolder)\Microsoft.Bcl.AsyncInterfaces.dll" Private="false" />
+    <Reference Include="$(CorLibsFolder)\System.Text.Json.dll" Private="false" />
+    <Reference Include="$(CorLibsFolder)\System.Runtime.CompilerServices.Unsafe.dll" Private="false" />
+    
+  </ItemGroup>
+
+  <!-- Interop assemblies -->
+  <ItemGroup>
+    <Reference Include="$(InteropFolder)/*.dll" Private="false" />
+    <Reference Remove="$(InteropFolder)/netstandard.dll" />
+    <Reference Remove="$(InteropFolder)/Newtonsoft.Json.dll" />
+  </ItemGroup>
+
+  <!-- Additional Dependencies -->
+  <ItemGroup>
+    <Reference Include="$(GameFolder)\GTFO-API.dll" Private="false" />
+    <Reference Include="$(GameFolder)\MTFO.dll" Private="false" />
+  </ItemGroup>
+
+
+</Project>
