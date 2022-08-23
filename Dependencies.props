@@ -21,9 +21,9 @@
 
   <!-- Mono libs -->
   <ItemGroup>
-    <Reference Include="$(CorLibsFolder)\Microsoft.Bcl.AsyncInterfaces.dll" Private="false" />
+    <!--<Reference Include="$(CorLibsFolder)\Microsoft.Bcl.AsyncInterfaces.dll" Private="false" />
     <Reference Include="$(CorLibsFolder)\System.Text.Json.dll" Private="false" />
-    <Reference Include="$(CorLibsFolder)\System.Runtime.CompilerServices.Unsafe.dll" Private="false" />
+    <Reference Include="$(CorLibsFolder)\System.Runtime.CompilerServices.Unsafe.dll" Private="false" />-->
     
   </ItemGroup>
 
@@ -36,8 +36,8 @@
 
   <!-- Additional Dependencies -->
   <ItemGroup>
-    <Reference Include="$(GameFolder)\GTFO-API.dll" Private="false" />
-    <Reference Include="$(GameFolder)\MTFO.dll" Private="false" />
+    <Reference Include="$(GameFolder)\BepInEx\plugins\GTFO-API.dll" Private="false" />
+    <Reference Include="$(GameFolder)\BepInEx\plugins\MTFO.dll" Private="false" />
   </ItemGroup>
 
 
