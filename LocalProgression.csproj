@@ -4,7 +4,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>LocalProgression</RootNamespace>
     <AssemblyName>Inas07.LocalProgression</AssemblyName>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net6</TargetFramework>
     <LangVersion>preview</LangVersion>
     <!--
       Due to the nature of coding with IL2CPP, unsafe blocks will be allowed by default.
@@ -15,6 +15,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <BaseOutputPath>G:\SteamLibrary\steamapps\common\GTFO\BepInEx\plugins</BaseOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
