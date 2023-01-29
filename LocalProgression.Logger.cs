@@ -1,13 +1,10 @@
-﻿using BepInEx.Core.Logging.Interpolation;
-using BepInEx.Logging;
-using System.Runtime.CompilerServices;
+﻿using BepInEx.Logging;
 using UnityEngine;
-
-namespace ScanPosOverride
+namespace LocalProgression
 {
     internal static class Logger
     {
-        private static ManualLogSource logger = BepInEx.Logging.Logger.CreateLogSource("ScanPosOverride");
+        private static ManualLogSource logger = BepInEx.Logging.Logger.CreateLogSource("LocalProgression");
 
         public static void Log(string format, params object[] args)
         {
@@ -55,11 +52,6 @@ namespace ScanPosOverride
             if (logger == null) return;
 
             logger.Log(LogLevel.Debug, str);
-        }
-
-        public static void Log(BepInExDebugLogInterpolatedStringHandler logHandler)
-        {
-            logger.LogDebug(logHandler);
         }
     }
 

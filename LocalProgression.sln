@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.4.33205.214
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScanPosOverride", "ScanPosOverride.csproj", "{9291A05F-CC26-4B45-B92E-1CDB908E57E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocalProgression", "LocalProgression.csproj", "{9291A05F-CC26-4B45-B92E-1CDB908E57E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

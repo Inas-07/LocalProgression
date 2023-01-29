@@ -2,8 +2,8 @@
   <Import Project="Dependencies.props" />
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <RootNamespace>ScanPosOverride</RootNamespace>
-    <AssemblyName>ScanPosOverride</AssemblyName>
+    <RootNamespace>LocalProgression</RootNamespace>
+    <AssemblyName>Inas07.LocalProgression</AssemblyName>
     <TargetFramework>net6</TargetFramework>
     <LangVersion>preview</LangVersion>
     <!--
@@ -29,16 +29,10 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="PuzzleOverrideData\PuzzleOverrideJsonFile.cs" />
-    <Compile Include="JSON\Il2CppListConverter.cs" />
-    <Compile Include="JSON\Il2CppListConverterFactory.cs" />
-    <Compile Include="JSON\Json.cs" />
-    <Compile Include="JSON\MTFOPartialDataUtil.cs" />
-    <Compile Include="JSON\MTFOUtil.cs" />
-    <Compile Include="Logger.cs" />
-    <Compile Include="Plugin.cs" />
-    <Compile Include="PuzzleOverrideData\PuzzleOverride.cs" />
-    <Compile Include="PuzzleOverrideData\Vec3.cs" />
+    <Compile Include="EntryPoint.cs" />
+    <Compile Include="ProgData.cs" />
+    <Compile Include="LocalProgression.Logger.cs" />
+    <Compile Include="Patch_OverwriteRundownProg.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies.props" />
