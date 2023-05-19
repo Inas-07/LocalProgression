@@ -2,13 +2,13 @@
 using UnityEngine;
 namespace LocalProgression
 {
-    internal static class Logger
+    internal static class LocalProgressionLogger
     {
         private static ManualLogSource logger = BepInEx.Logging.Logger.CreateLogSource("LocalProgression");
 
         public static void Log(string format, params object[] args)
         {
-            Logger.Log(string.Format(format, args));
+            LocalProgressionLogger.Log(string.Format(format, args));
         }
 
         public static void Log(string str)
@@ -20,7 +20,7 @@ namespace LocalProgression
 
         public static void Warning(string format, params object[] args)
         {
-            Logger.Warning(string.Format(format, args));
+            LocalProgressionLogger.Warning(string.Format(format, args));
         }
 
         public static void Warning(string str)
@@ -32,7 +32,7 @@ namespace LocalProgression
 
         public static void Error(string format, params object[] args)
         {
-            Logger.Error(string.Format(format, args));
+            LocalProgressionLogger.Error(string.Format(format, args));
         }
 
         public static void Error(string str)
@@ -44,7 +44,7 @@ namespace LocalProgression
 
         public static void Debug(string format, params object[] args)
         {
-            Logger.Debug(string.Format(format, args));
+            LocalProgressionLogger.Debug(string.Format(format, args));
         }
 
         public static void Debug(string str)

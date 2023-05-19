@@ -7,7 +7,6 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using CellMenu;
-using Localization;
 
 namespace LocalProgression
 {
@@ -26,7 +25,7 @@ namespace LocalProgression
         {
             if (localProgressionData.localProgDict == null)
             {
-                Logger.Error(nameof(Patch_LocalRundownProgression), "Critical: localProgData.LocalProgDict is null!");
+                LocalProgressionLogger.Error(nameof(Patch_LocalRundownProgression), "Critical: localProgData.LocalProgDict is null!");
                 return;
             }
 
@@ -72,13 +71,13 @@ namespace LocalProgression
                 var RundownIdsToLoad = GameSetupDataBlock.GetBlock(1).RundownIdsToLoad;
                 if (RundownIdsToLoad == null || RundownIdsToLoad.Count < 1)
                 {
-                    Logger.Error("Could not find any rundown id in GameSetupDatablock, using Rundown_id: 1");
+                    LocalProgressionLogger.Error("Could not find any rundown id in GameSetupDatablock, using Rundown_id: 1");
                     localProgressionData.rundownId = 1;
                 }
                 else 
                 {
                     if (RundownIdsToLoad.Count > 1)
-                        Logger.Warning("Multiple Rundown_id found in GameSetupDatablock, using the first Rundown_id: {0}", RundownIdsToLoad[0]);
+                        LocalProgressionLogger.Warning("Multiple Rundown_id found in GameSetupDatablock, using the first Rundown_id: {0}", RundownIdsToLoad[0]);
                     
                     localProgressionData.rundownId = RundownIdsToLoad[0];
                 }
@@ -86,7 +85,7 @@ namespace LocalProgression
                 var rundownDB = RundownDataBlock.GetBlock(localProgressionData.rundownId);
                 if(rundownDB == null)
                 {
-                    Logger.Warning("Procrastinating initialization.");
+                    LocalProgressionLogger.Warning("Procrastinating initialization.");
                     localProgressionData.rundownName = "";
                     return;
                 }
@@ -150,7 +149,7 @@ namespace LocalProgression
                 case eRundownTier.TierC: reqToReach = rundownDB.ReqToReachTierC; break;
                 case eRundownTier.TierD: reqToReach = rundownDB.ReqToReachTierD; break;
                 case eRundownTier.TierE: reqToReach = rundownDB.ReqToReachTierE; break;
-                default: Logger.Error("Unsupporrted tier: {0}", tier); return true;
+                default: LocalProgressionLogger.Error("Unsupporrted tier: {0}", tier); return true;
             }
 
             if (localProgressionData.mainClearCount < reqToReach.MainSectors
@@ -166,7 +165,7 @@ namespace LocalProgression
             if (localProgressionData.localProgDict == null)
             {
                 //APILogger.Error(nameof(Patch_LocalRundownProgression), "Critical: localRundownProgData is uninitialized.");
-                Logger.Error("Critical: localRundownProgData is uninitialized.");
+                LocalProgressionLogger.Error("Critical: localRundownProgData is uninitialized.");
                 return false;
             }
            
@@ -196,7 +195,7 @@ namespace LocalProgression
                     return true;
                 
                 default:
-                    Logger.Warning("Unsupported eExpeditionAccessibility: {0}", expedition.Accessibility);
+                    LocalProgressionLogger.Warning("Unsupported eExpeditionAccessibility: {0}", expedition.Accessibility);
                     return true; // return true anyway
             }
         }
