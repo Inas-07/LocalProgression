@@ -154,7 +154,7 @@ namespace LocalProgression
             }
         }
 
-        public void Init()
+        internal void Init()
         {
             if (!Directory.Exists(DirPath))
             {
