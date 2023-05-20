@@ -5,7 +5,6 @@ using System.IO;
 using System.Text;
 using System.Collections.Generic;
 using CellMenu;
-using Globals;
 using LocalProgression.Data;
 
 namespace LocalProgression
@@ -20,9 +19,6 @@ namespace LocalProgression
 
         private CM_PageRundown_New CurrentRundownPage = null;
 
-        internal RundownProgressionData GetLocalProgressionDataForCurrentRundown() => CurrentRundownProgressionData;
-
-        // TODO: support multi-rundown
         private static string RundownLocalProgressionFilePath(string rundownName)
         {
             char[] invalidPathChars = Path.GetInvalidPathChars();
@@ -34,6 +30,39 @@ namespace LocalProgression
 
             return Path.Combine(DirPath, rundownName);
         }
+
+        private static Dictionary<string, ExpeditionProgressionData> ReadRundownLocalProgressionData(string rundownName)
+        {
+            string filepath = RundownLocalProgressionFilePath(rundownName);
+            var dataDict = new Dictionary<string, ExpeditionProgressionData>();
+
+            if (File.Exists(filepath))
+            {
+                using (var stream = File.Open(filepath, FileMode.Open))
+                {
+                    using (var reader = new BinaryReader(stream, Encoding.UTF8, false))
+                    {
+                        int LocalProgDict_Count = 0;
+                        LocalProgDict_Count = reader.ReadInt32();
+                        for (int cnt = 0; cnt < LocalProgDict_Count; cnt++)
+                        {
+                            ExpeditionProgressionData data = new ExpeditionProgressionData();
+                            data.ExpeditionKey = reader.ReadString();
+                            data.MainCompletionCount = reader.ReadInt32();
+                            data.SecondaryCompletionCount = reader.ReadInt32();
+                            data.ThirdCompletionCount = reader.ReadInt32();
+                            data.AllClearCount = reader.ReadInt32();
+
+                            dataDict.Add(data.ExpeditionKey, data);
+                        }
+                    }
+                }
+            }
+
+            return dataDict;
+        }
+
+        internal RundownProgressionData GetLocalProgressionDataForCurrentRundown() => CurrentRundownProgressionData;
 
         private void SaveRundownProgressionDataToDisk()
         {
@@ -58,7 +87,6 @@ namespace LocalProgression
             }
         }
 
-        // to be invoked at GS_ExpeditionSuccess
         public void RecordExpeditionSuccessForCurrentRundown(string expeditionKey, bool mainLayerCleared, bool secondaryLayerCleared, bool thirdLayerCleared)
         {
             if (RundownManager.ActiveExpedition.ExcludeFromProgression) return;
@@ -126,37 +154,6 @@ namespace LocalProgression
             }
         }
 
-        private static Dictionary<string, ExpeditionProgressionData> ReadRundownLocalProgressionData(string rundownName)
-        {
-            string filepath = RundownLocalProgressionFilePath(rundownName);
-            var dataDict = new Dictionary<string, ExpeditionProgressionData>();
-
-            if (File.Exists(filepath))
-            {
-                using (var stream = File.Open(filepath, FileMode.Open))
-                {
-                    using (var reader = new BinaryReader(stream, Encoding.UTF8, false))
-                    {
-                        int LocalProgDict_Count = 0;
-                        LocalProgDict_Count = reader.ReadInt32();
-                        for (int cnt = 0; cnt < LocalProgDict_Count; cnt++)
-                        {
-                            ExpeditionProgressionData data = new ExpeditionProgressionData();
-                            data.ExpeditionKey = reader.ReadString();
-                            data.MainCompletionCount = reader.ReadInt32();
-                            data.SecondaryCompletionCount = reader.ReadInt32();
-                            data.ThirdCompletionCount = reader.ReadInt32();
-                            data.AllClearCount = reader.ReadInt32();
-
-                            dataDict.Add(data.ExpeditionKey, data);
-                        }
-                    }
-                }
-            }
-
-            return dataDict;
-        }
-
         public void Init()
         {
             if (!Directory.Exists(DirPath))
@@ -184,7 +181,7 @@ namespace LocalProgression
             if (!CurrentRundownPage.m_isActive)
             {
                 // recompute on patch - CurrentRundownPage.OnActive
-                LocalProgressionLogger.Error("SetLocalProgressionDataToRundownPage: page is not active");
+                LocalProgressionLogger.Debug("SetLocalProgressionDataToRundownPage: page is not active. Will set progression data to rundown page when page is active.");
                 return;
             }
 
