@@ -11,11 +11,11 @@
     -->
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Platforms>x64</Platforms>
-    <OutputPath>G:\SteamLibrary\steamapps\common\GTFO\BepInEx\plugins\</OutputPath>
+    <OutputPath>I:\SteamLibrary\steamapps\common\GTFO\BepInEx\plugins\</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
-    <BaseOutputPath>G:\SteamLibrary\steamapps\common\GTFO\BepInEx\plugins</BaseOutputPath>
+    <!--<BaseOutputPath>I:\SteamLibrary\steamapps\common\GTFO\BepInEx\plugins</BaseOutputPath>-->
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -29,10 +29,13 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Data\ExpeditionProgressionData.cs" />
     <Compile Include="EntryPoint.cs" />
-    <Compile Include="ProgData.cs" />
-    <Compile Include="LocalProgression.Logger.cs" />
-    <Compile Include="Patch_OverwriteRundownProg.cs" />
+    <Compile Include="LocalProgressionManager.cs" />
+    <Compile Include="Patches\CM_PageRundown_New.cs" />
+    <Compile Include="Patches\GS_ExpeditionSuccess_Enter.cs" />
+    <Compile Include="Data\RundownProgressionData.cs" />
+    <Compile Include="LocalProgressionLogger.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies.props" />
