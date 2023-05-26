@@ -3,7 +3,7 @@
 namespace LocalProgression.Patches
 {
     [HarmonyPatch]
-    internal class GS_ExpeditionSuccess_Enter
+    internal class Patches_GS_ExpeditionSuccess
     {
         [HarmonyPostfix]
         [HarmonyPatch(typeof(GS_ExpeditionSuccess), nameof(GS_ExpeditionSuccess.Enter))]

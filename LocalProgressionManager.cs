@@ -206,17 +206,15 @@ namespace LocalProgression
                 CurrentRundownPage.m_tierMarkerSectorSummary.SetSectorIconTextForAllCleared(nativeLocalProgData.clearedAllClear.ToString() + "<size=50%><color=#FFFFFF33><size=55%>/" + nativeLocalProgData.totalAllClear + "</color></size>");
             }
 
-            if (CurrentRundownPage.m_tierMarker1 == null) return;
-
-            CurrentRundownPage.m_tierMarker1.SetProgression(nativeLocalProgData, new RundownTierProgressionData());
+            CurrentRundownPage.m_tierMarker1?.SetProgression(nativeLocalProgData, new RundownTierProgressionData());
             UpdateTierIconsWithProgression(CurrentRundownPage.m_expIconsTier1, CurrentRundownPage.m_tierMarker1, true);
-            CurrentRundownPage.m_tierMarker2.SetProgression(nativeLocalProgData, block.ReqToReachTierB);
+            CurrentRundownPage.m_tierMarker2?.SetProgression(nativeLocalProgData, block.ReqToReachTierB);
             UpdateTierIconsWithProgression(CurrentRundownPage.m_expIconsTier2, CurrentRundownPage.m_tierMarker2, nativeLocalProgData.tierBUnlocked && block.UseTierUnlockRequirements);
-            CurrentRundownPage.m_tierMarker3.SetProgression(nativeLocalProgData, block.ReqToReachTierC);
+            CurrentRundownPage.m_tierMarker3?.SetProgression(nativeLocalProgData, block.ReqToReachTierC);
             UpdateTierIconsWithProgression(CurrentRundownPage.m_expIconsTier3, CurrentRundownPage.m_tierMarker3, nativeLocalProgData.tierCUnlocked && block.UseTierUnlockRequirements);
-            CurrentRundownPage.m_tierMarker4.SetProgression(nativeLocalProgData, block.ReqToReachTierD);
+            CurrentRundownPage.m_tierMarker4?.SetProgression(nativeLocalProgData, block.ReqToReachTierD);
             UpdateTierIconsWithProgression(CurrentRundownPage.m_expIconsTier4, CurrentRundownPage.m_tierMarker4, nativeLocalProgData.tierDUnlocked && block.UseTierUnlockRequirements);
-            CurrentRundownPage.m_tierMarker5.SetProgression(nativeLocalProgData, block.ReqToReachTierE);
+            CurrentRundownPage.m_tierMarker5?.SetProgression(nativeLocalProgData, block.ReqToReachTierE);
             UpdateTierIconsWithProgression(CurrentRundownPage.m_expIconsTier5, CurrentRundownPage.m_tierMarker5, nativeLocalProgData.tierEUnlocked && block.UseTierUnlockRequirements);
         }
 
@@ -254,7 +252,7 @@ namespace LocalProgression
                 }
 
                 bool expUnlocked = CheckExpeditionUnlocked(tierIcon.DataBlock, tierIcon.Tier);
-                if (thisTierUnlocked | expUnlocked)
+                if (expUnlocked)
                 {
                     if (hasClearanceData)
                     {
@@ -277,11 +275,11 @@ namespace LocalProgression
 
             if (thisTierUnlocked)
             {
-                tierMarker.SetStatus(eRundownTierMarkerStatus.Unlocked);
+                tierMarker?.SetStatus(eRundownTierMarkerStatus.Unlocked);
             }
             else
             {
-                tierMarker.SetStatus(eRundownTierMarkerStatus.Locked);
+                tierMarker?.SetStatus(eRundownTierMarkerStatus.Locked);
             }
         }
 

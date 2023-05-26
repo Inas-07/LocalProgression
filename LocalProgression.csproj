@@ -29,11 +29,13 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Component\ExpeditionSuccess_NoBooster.cs" />
     <Compile Include="Data\ExpeditionProgressionData.cs" />
     <Compile Include="EntryPoint.cs" />
     <Compile Include="LocalProgressionManager.cs" />
+    <Compile Include="Patches\CM_PageExpeditionSuccess.cs" />
     <Compile Include="Patches\CM_PageRundown_New.cs" />
-    <Compile Include="Patches\GS_ExpeditionSuccess_Enter.cs" />
+    <Compile Include="Patches\GS_ExpeditionSuccess.cs" />
     <Compile Include="Data\RundownProgressionData.cs" />
     <Compile Include="LocalProgressionLogger.cs" />
   </ItemGroup>
