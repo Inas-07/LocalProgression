@@ -16,6 +16,7 @@ namespace LocalProgression.Patches
             bool secondaryLayerCleared = WardenObjectiveManager.CurrentState.second_status == eWardenObjectiveStatus.WardenObjectiveItemSolved;
             bool thirdLayerCleared = WardenObjectiveManager.CurrentState.third_status == eWardenObjectiveStatus.WardenObjectiveItemSolved;
 
+            LPLogger.Debug($"Level cleared, recording - {expeditionKey}");
             LocalProgressionManager.Current.RecordExpeditionSuccessForCurrentRundown(expeditionKey, mainLayerCleared, secondaryLayerCleared, thirdLayerCleared);
         }
     }

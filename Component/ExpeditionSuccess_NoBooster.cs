@@ -26,14 +26,14 @@ namespace LocalProgression.Component
                 expeditionSuccessPage = gameObject.GetComponent<CM_PageExpeditionSuccess>();
                 if (expeditionSuccessPage == null)
                 {
-                    LocalProgressionLogger.Error("ExpeditionSuccess_NoBooster.Setup: cannot find CM_PageExpeditionSuccess in parent.. Add `PageExpeditionSuccessWithNoBooster` to CM_ExpeditionSuccessPage as component first!");
+                    LPLogger.Error("ExpeditionSuccess_NoBooster.Setup: cannot find CM_PageExpeditionSuccess in parent.. Add `PageExpeditionSuccessWithNoBooster` to CM_ExpeditionSuccessPage as component first!");
                     return;
                 }
 
                 m_completeWithNoBoosterIcon = Instantiate(expeditionSuccessPage.m_sectorIconAllCompleted);
                 if (m_completeWithNoBoosterIcon == null)
                 {
-                    LocalProgressionLogger.Error("ExpeditionSuccess_NoBooster.Setup: cannot instantiate NoBooster icon...");
+                    LPLogger.Error("ExpeditionSuccess_NoBooster.Setup: cannot instantiate NoBooster icon...");
                 }
             };
 
@@ -42,7 +42,7 @@ namespace LocalProgression.Component
 
         private void OnEnable()
         {
-            LocalProgressionLogger.Warning("ExpeditionSuccess_NoBooster: OnEnable");
+            LPLogger.Warning("ExpeditionSuccess_NoBooster: OnEnable");
             gameObject.SetActive(true);
 
             bool isClearedWithNoBosster = true;

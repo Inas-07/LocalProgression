@@ -33,11 +33,11 @@
     <Compile Include="Data\ExpeditionProgressionData.cs" />
     <Compile Include="EntryPoint.cs" />
     <Compile Include="LocalProgressionManager.cs" />
-    <Compile Include="Patches\CM_PageExpeditionSuccess.cs" />
+    <Compile Include="Patches\SectorIconText.cs" />
     <Compile Include="Patches\CM_PageRundown_New.cs" />
     <Compile Include="Patches\GS_ExpeditionSuccess.cs" />
     <Compile Include="Data\RundownProgressionData.cs" />
-    <Compile Include="LocalProgressionLogger.cs" />
+    <Compile Include="LPLogger.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies.props" />
