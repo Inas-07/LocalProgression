@@ -18,9 +18,9 @@ namespace LocalProgression
 
         private RundownProgressionData CurrentRundownProgressionData { get; } = new RundownProgressionData();
 
-        internal RundownManager.RundownProgData nativeLocalProgData { get; private set; } = default;
+        internal RundownManager.RundownProgData nativeProgData { get; private set; } = default;
 
-        private CM_PageRundown_New CurrentRundownPage = null;
+        private CM_PageRundown_New rundownPage = null;
 
         private static string RundownLocalProgressionFilePath(string rundownName)
         {
@@ -134,8 +134,16 @@ namespace LocalProgression
             SaveRundownProgressionDataToDisk();
         }
 
-        public void UpdateLocalProgressionDataToRundown(uint rundownID)
+        public void UpdateLocalProgressionDataToActiveRundown()
         {
+            var rundownKey = RundownManager.ActiveRundownKey;
+
+            if (!RundownManager.TryGetIdFromLocalRundownKey(rundownKey, out uint rundownID) || rundownID == 0u)
+            {
+                LPLogger.Debug($"OnRundownProgressionUpdated: cannot find rundown with rundown key `{rundownKey}`!");
+                return;
+            }
+
             LPLogger.Warning($"Update LPData to rundown_id: {rundownID}");
             CurrentRundownProgressionData.Reset();
 
@@ -170,63 +178,80 @@ namespace LocalProgression
             RundownManager.OnRundownProgressionUpdated += new Action(OnNativeRundownProgressionUpdated);
         }
 
-        private void OnNativeRundownProgressionUpdated()
+        internal void OnNativeRundownProgressionUpdated()
         {
-            var rundownKey = RundownManager.ActiveRundownKey;
+            UpdateLocalProgressionDataToActiveRundown();
 
-            if(!RundownManager.TryGetIdFromLocalRundownKey(rundownKey, out uint rundownID) || rundownID == 0u)
-            {
-                LPLogger.Debug($"OnRundownProgressionUpdated: cannot find rundown with rundown key `{rundownKey}`!");
-                return;
-            }
-
-            LPLogger.Warning($"OnNativeRundownProgressionUpdated: Update LocalProgression Data to rundown id {rundownID}");
-            UpdateLocalProgressionDataToRundown(rundownID);
-
-            if (!CurrentRundownPage.m_isActive)
+            if (rundownPage == null || !rundownPage.m_isActive)
             {
                 // recompute on patch - CurrentRundownPage.OnActive
-                LPLogger.Debug("SetLocalProgressionDataToRundownPage: page is not active. Will set progression data to rundown page when page is active.");
+                //LPLogger.Debug("SetLocalProgressionDataToRundownPage: page is not active. Will set progression data to rundown page when page is active.");
                 return;
             }
 
             UpdateRundownPageExpeditionIconProgression();
         }
 
-        internal void SetCurrentRundownPageInstance(CM_PageRundown_New __instance) => CurrentRundownPage = __instance;
+        internal void SetCurrentRundownPageInstance(CM_PageRundown_New __instance) => rundownPage = __instance;
 
-        internal void UpdateRundownPageExpeditionIconProgression()
+        private void UpdateRundownPageExpeditionIconProgression()
         {
-            if (CurrentRundownPage == null) return;
+            if (rundownPage == null) return;
 
-            if(CurrentRundownProgressionData.RundownID == 0)
-            {
-                LPLogger.Warning($"UpdateRundownPageExpeditionIconProgression: rundown_id == 0! Trying to update....");
-                OnNativeRundownProgressionUpdated();
-            }
-
-            var rundownID = CurrentRundownProgressionData.RundownID;
+            uint rundownID = CurrentRundownProgressionData.RundownID;
             if (rundownID == 0)
             {
-                LPLogger.Error($"UpdateRundownPageExpeditionIconProgression: Cannot get a valid rundown_id...");
+                LPLogger.Warning($"UpdateRundownPageExpeditionIconProgression: rundown_id == 0!");
                 return;
             }
 
             RundownDataBlock block = GameDataBlockBase<RundownDataBlock>.GetBlock(rundownID);
             LPLogger.Log($"CM_PageRundown_New.UpdateRundownExpeditionProgression, overwrite with LocalProgression Data, RundownID {CurrentRundownProgressionData.RundownID}");
             
-            nativeLocalProgData = ComputeLocalProgressionDataToRundownProgData();
+            nativeProgData = ComputeLocalProgressionDataToRundownProgData();
 
-            CurrentRundownPage.m_tierMarker1?.SetProgression(nativeLocalProgData, new RundownTierProgressionData());
-            UpdateTierIconsWithProgression(CurrentRundownPage.m_expIconsTier1, CurrentRundownPage.m_tierMarker1, true);
-            CurrentRundownPage.m_tierMarker2?.SetProgression(nativeLocalProgData, block.ReqToReachTierB);
-            UpdateTierIconsWithProgression(CurrentRundownPage.m_expIconsTier2, CurrentRundownPage.m_tierMarker2, nativeLocalProgData.tierBUnlocked && block.UseTierUnlockRequirements);
-            CurrentRundownPage.m_tierMarker3?.SetProgression(nativeLocalProgData, block.ReqToReachTierC);
-            UpdateTierIconsWithProgression(CurrentRundownPage.m_expIconsTier3, CurrentRundownPage.m_tierMarker3, nativeLocalProgData.tierCUnlocked && block.UseTierUnlockRequirements);
-            CurrentRundownPage.m_tierMarker4?.SetProgression(nativeLocalProgData, block.ReqToReachTierD);
-            UpdateTierIconsWithProgression(CurrentRundownPage.m_expIconsTier4, CurrentRundownPage.m_tierMarker4, nativeLocalProgData.tierDUnlocked && block.UseTierUnlockRequirements);
-            CurrentRundownPage.m_tierMarker5?.SetProgression(nativeLocalProgData, block.ReqToReachTierE);
-            UpdateTierIconsWithProgression(CurrentRundownPage.m_expIconsTier5, CurrentRundownPage.m_tierMarker5, nativeLocalProgData.tierEUnlocked && block.UseTierUnlockRequirements);
+            if(rundownPage.m_tierMarker1 != null)
+            {
+                rundownPage.m_tierMarker1.SetProgression(nativeProgData, new RundownTierProgressionData());
+                if (rundownPage.m_expIconsTier1 != null)
+                    UpdateTierIconsWithProgression(rundownPage.m_expIconsTier1, rundownPage.m_tierMarker1, true);
+            }
+
+            if (rundownPage.m_tierMarker2 != null)
+            {
+                rundownPage.m_tierMarker2.SetProgression(nativeProgData, block.ReqToReachTierB);
+                if (rundownPage.m_expIconsTier2 != null)
+                    UpdateTierIconsWithProgression(rundownPage.m_expIconsTier2, rundownPage.m_tierMarker2, nativeProgData.tierBUnlocked && block.UseTierUnlockRequirements);
+            }
+
+            if (rundownPage.m_tierMarker3 != null)
+            {
+                rundownPage.m_tierMarker3.SetProgression(nativeProgData, block.ReqToReachTierC);
+                if (rundownPage.m_expIconsTier3 != null)
+                    UpdateTierIconsWithProgression(rundownPage.m_expIconsTier3, rundownPage.m_tierMarker3, nativeProgData.tierCUnlocked && block.UseTierUnlockRequirements);
+            }
+
+            if (rundownPage.m_tierMarker4 != null)
+            {
+                rundownPage.m_tierMarker4.SetProgression(nativeProgData, block.ReqToReachTierD);
+                if (rundownPage.m_expIconsTier4 != null)
+                    UpdateTierIconsWithProgression(rundownPage.m_expIconsTier4, rundownPage.m_tierMarker4, nativeProgData.tierDUnlocked && block.UseTierUnlockRequirements);
+            }
+
+            if (rundownPage.m_tierMarker5 != null)
+            {
+                rundownPage.m_tierMarker5.SetProgression(nativeProgData, block.ReqToReachTierE);
+                if (rundownPage.m_expIconsTier5 != null)
+                    UpdateTierIconsWithProgression(rundownPage.m_expIconsTier5, rundownPage.m_tierMarker5, nativeProgData.tierEUnlocked && block.UseTierUnlockRequirements);
+            }
+
+            if(rundownPage.m_tierMarkerSectorSummary != null)
+            {
+                rundownPage.m_tierMarkerSectorSummary.SetSectorIconTextForMain($"<color=orange>[{nativeProgData.clearedMain}/{nativeProgData.totalMain}]</color>");
+                rundownPage.m_tierMarkerSectorSummary.SetSectorIconTextForSecondary($"<color=orange>[{nativeProgData.clearedSecondary}/{nativeProgData.totalSecondary}]</color>");
+                rundownPage.m_tierMarkerSectorSummary.SetSectorIconTextForThird($"<color=orange>[{nativeProgData.clearedThird}/{nativeProgData.totalThird}]</color>");
+                rundownPage.m_tierMarkerSectorSummary.SetSectorIconTextForAllCleared($"<color=orange>[{nativeProgData.clearedAllClear}/{nativeProgData.totalAllClear}]</color>");
+            }
         }
 
         private void UpdateTierIconsWithProgression(Il2CppSystem.Collections.Generic.List<CM_ExpeditionIcon_New> tierIcons, CM_RundownTierMarker tierMarker, bool thisTierUnlocked) 
@@ -266,16 +291,16 @@ namespace LocalProgression
                 {
                     if (hasClearanceData)
                     {
-                        CurrentRundownPage.SetIconStatus(tierIcon, eExpeditionIconStatus.PlayedAndFinished, mainFinishCount, secondFinishCount, thirdFinishCount, allFinishedCount);
+                        rundownPage.SetIconStatus(tierIcon, eExpeditionIconStatus.PlayedAndFinished, mainFinishCount, secondFinishCount, thirdFinishCount, allFinishedCount);
                     }
                     else
                     {
-                        CurrentRundownPage.SetIconStatus(tierIcon, eExpeditionIconStatus.NotPlayed);
+                        rundownPage.SetIconStatus(tierIcon, eExpeditionIconStatus.NotPlayed);
                     }
                 }
                 else if (hasClearanceData)
                 {
-                    CurrentRundownPage.SetIconStatus(tierIcon, eExpeditionIconStatus.TierLockedFinishedAnyway, mainFinishCount, secondFinishCount, thirdFinishCount, allFinishedCount);
+                    rundownPage.SetIconStatus(tierIcon, eExpeditionIconStatus.TierLockedFinishedAnyway, mainFinishCount, secondFinishCount, thirdFinishCount, allFinishedCount);
                 }
                 else
                 {
@@ -285,7 +310,7 @@ namespace LocalProgression
                     }
                     else
                     {
-                        CurrentRundownPage.SetIconStatus(tierIcon, eExpeditionIconStatus.TierLocked);
+                        rundownPage.SetIconStatus(tierIcon, eExpeditionIconStatus.TierLocked);
                     }
                 }
             }

@@ -14,17 +14,10 @@ namespace LocalProgression.Patches
         }
 
         [HarmonyPostfix]
-        [HarmonyPatch(typeof(CM_PageRundown_New), nameof(CM_PageRundown_New.UpdateTierIconsWithProgression))]
-        private static void Post_UpdateTierIconsWithProgression(CM_PageRundown_New __instance)
+        [HarmonyPatch(typeof(CM_PageRundown_New), nameof(CM_PageRundown_New.PlaceRundown))]
+        private static void Post_PlaceRundown(CM_PageRundown_New __instance)
         {
-            LocalProgressionManager.Current.UpdateRundownPageExpeditionIconProgression();
+            LocalProgressionManager.Current.OnNativeRundownProgressionUpdated();
         }
-
-        //[HarmonyPostfix]
-        //[HarmonyPatch(typeof(CM_PageRundown_New), nameof(CM_PageRundown_New.OnEnable))]
-        //private static void Post_OnEnable(CM_PageRundown_New __instance)
-        //{
-        //    LocalProgressionManager.Current.UpdateRundownPageExpeditionIconProgression();
-        //}
     }
 }
