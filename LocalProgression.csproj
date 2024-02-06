@@ -34,6 +34,7 @@
     <Compile Include="EntryPoint.cs" />
     <Compile Include="LocalProgressionManager.cs" />
     <Compile Include="Patches\CM_PageRundown_New.cs" />
+    <Compile Include="Patches\FixEndScreen.cs" />
     <Compile Include="Patches\GS_ExpeditionSuccess.cs" />
     <Compile Include="Data\RundownProgressionData.cs" />
     <Compile Include="LPLogger.cs" />
