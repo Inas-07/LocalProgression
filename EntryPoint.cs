@@ -7,7 +7,7 @@ namespace LocalProgression
 {
     [BepInDependency("dev.gtfomodding.gtfo-api")]
     [BepInDependency("com.dak.MTFO", BepInDependency.DependencyFlags.HardDependency)]
-    [BepInPlugin("Inas.LocalProgression", "LocalProgression", "1.2.0")]
+    [BepInPlugin("Inas.LocalProgression", "LocalProgression", "1.3.0")]
     
     public class EntryPoint: BasePlugin
     {
