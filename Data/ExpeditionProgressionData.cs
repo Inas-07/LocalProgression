@@ -11,5 +11,7 @@
         public int ThirdCompletionCount { set; get; } = 0;
 
         public int AllClearCount { set; get; } = 0;
+    
+        public int NoBoosterAllClearCount { set; get; } = 0;
     }
 }

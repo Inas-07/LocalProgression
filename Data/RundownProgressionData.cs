@@ -9,7 +9,7 @@ namespace LocalProgression.Data
 
         public uint RundownID { set; get; } = 0u;
 
-        public Dictionary<string, ExpeditionProgressionData> LocalProgressionDict { set; get; } = new();
+        public Dictionary<string, ExpeditionProgressionData> LPData { set; get; } = new();
 
         public int MainClearCount { set; get; } = 0;
 
@@ -19,12 +19,14 @@ namespace LocalProgression.Data
 
         public int AllClearCount { set; get; } = 0;
 
+        public int NoBoosterAllClearCount { set; get; } = 0;
+
         public void Reset()
         {
             RundownName = string.Empty;
             RundownID = 0;
-            LocalProgressionDict.Clear();
-            MainClearCount = SecondaryClearCount = ThirdClearCount = AllClearCount = 0;
+            LPData.Clear();
+            MainClearCount = SecondaryClearCount = ThirdClearCount = AllClearCount = NoBoosterAllClearCount = 0;
         }
     }
 }

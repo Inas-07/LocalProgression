@@ -29,11 +29,22 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Component\ExpeditionSuccess_NoBooster.cs" />
+    <Compile Include="Assets.cs" />
+    <Compile Include="Component\ExpeditionSuccessPage_NoBoosterIcon.cs" />
+    <Compile Include="Component\ExpeditionWindow_NoBoosterIcon.cs" />
+    <Compile Include="Component\NoBoosterIconGOWrapper.cs" />
+    <Compile Include="Component\RundownTierMarker_NoBoosterIcon.cs" />
     <Compile Include="Data\ExpeditionProgressionData.cs" />
+    <Compile Include="Data\RundownProgressonConfig.cs" />
     <Compile Include="EntryPoint.cs" />
+    <Compile Include="JSON.cs" />
+    <Compile Include="LocalProgressionManager.Config.cs" />
     <Compile Include="LocalProgressionManager.cs" />
+    <Compile Include="Patches\CM_ExpeditionWindow.cs" />
+    <Compile Include="Patches\CM_PageExpeditionIcon.cs" />
+    <Compile Include="Patches\CM_PageExpeditionSuccess.cs" />
     <Compile Include="Patches\CM_PageRundown_New.cs" />
+    <Compile Include="Patches\CM_RundownTierMarker.cs" />
     <Compile Include="Patches\FixEndScreen.cs" />
     <Compile Include="Patches\GS_ExpeditionSuccess.cs" />
     <Compile Include="Data\RundownProgressionData.cs" />

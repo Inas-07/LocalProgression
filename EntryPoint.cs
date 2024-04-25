@@ -7,7 +7,7 @@ namespace LocalProgression
 {
     [BepInDependency("dev.gtfomodding.gtfo-api")]
     [BepInDependency("com.dak.MTFO", BepInDependency.DependencyFlags.HardDependency)]
-    [BepInPlugin("Inas.LocalProgression", "LocalProgression", "1.1.10")]
+    [BepInPlugin("Inas.LocalProgression", "LocalProgression", "1.2.0")]
     
     public class EntryPoint: BasePlugin
     {
@@ -19,6 +19,7 @@ namespace LocalProgression
             m_Harmony.PatchAll();
 
             EventAPI.OnManagersSetup += LocalProgressionManager.Current.Init;
+            AssetAPI.OnAssetBundlesLoaded += Assets.Init;
         }
     }
 }
