@@ -12,7 +12,7 @@ namespace LocalProgression.Patches
             var CompletedExpedtionData = RundownManager.GetActiveExpeditionData();
 
             string expeditionKey = LocalProgressionManager.Current.ExpeditionKey(CompletedExpedtionData.tier, CompletedExpedtionData.expeditionIndex);
-            bool mainLayerCleared = WardenObjectiveManager.CurrentState.main_status == eWardenObjectiveStatus.WardenObjectiveItemSolved;
+            bool mainLayerCleared = WardenObjectiveManager.CurrentState.main_status == eWardenObjectiveStatus.WardenObjectiveItemSolved || WardenObjectiveManager.GetWinOnDeath();
             bool secondaryLayerCleared = WardenObjectiveManager.CurrentState.second_status == eWardenObjectiveStatus.WardenObjectiveItemSolved;
             bool thirdLayerCleared = WardenObjectiveManager.CurrentState.third_status == eWardenObjectiveStatus.WardenObjectiveItemSolved;
             bool clearedWithNoBooster = LocalProgressionManager.Current.AllSectorCompletedWithoutBoosterAndCheckpoint();
