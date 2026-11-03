@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace LocalProgression.Data
+﻿namespace LocalProgression.Data
 {
     public class RundownProgressionData
     {

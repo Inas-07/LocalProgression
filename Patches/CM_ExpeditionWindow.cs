@@ -1,9 +1,9 @@
 ﻿using CellMenu;
-using UnityEngine;
 using HarmonyLib;
 using LevelGeneration;
 using LocalProgression.Component;
 using SNetwork;
+using UnityEngine;
 
 namespace LocalProgression.Patches
 {
@@ -86,7 +86,7 @@ namespace LocalProgression.Patches
 
             float delay = 1.8f;
             float interval = 0.4f;
-            __instance.m_sectorIconMain.Setup(LG_LayerType.MainLayer, __instance.m_root, true,
+            __instance.m_sectorIconMain.Setup(LG_LayerType.MainLayer, __instance.m_root, true, 
                 LPData.MainCompletionCount > 0,
                 true, 0.5f, 0.8f);
             __instance.m_sectorIconMain.SetVisible(false);
@@ -98,7 +98,7 @@ namespace LocalProgression.Patches
             __instance.m_sectorIconSecond.StopBlink();
             __instance.m_sectorIconThird.StopBlink();
             __instance.m_sectorIconAllCompleted.StopBlink();
-            
+
             __instance.m_sectorIconMain.BlinkIn(delay);
             delay += interval;
 
@@ -124,7 +124,7 @@ namespace LocalProgression.Patches
                 delay += interval;
             }
 
-            if(LocalProgressionManager.Current.TryGetRundownConfig(RundownID, out var rundownConf) && rundownConf.EnableNoBoosterUsedProgressionForRundown 
+            if (LocalProgressionManager.Current.TryGetRundownConfig(RundownID, out var rundownConf) && rundownConf.EnableNoBoosterUsedProgressionForRundown
                 || LocalProgressionManager.Current.TryGetExpeditionConfig(RundownID, __instance.m_tier, __instance.m_expIndex, out var conf) && conf.EnableNoBoosterUsedProgression)
             {
                 noBoosterIcon.SetupNoBoosterUsedIcon(LPData.NoBoosterAllClearCount > 0);

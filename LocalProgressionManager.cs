@@ -1,15 +1,10 @@
-﻿using GameData;
-using DropServer;
-using System;
-using System.IO;
-using System.Text;
-using System.Collections.Generic;
+﻿using BoosterImplants;
 using CellMenu;
-using LocalProgression.Data;
-using Globals;
-using BoosterImplants;
+using DropServer;
+using GameData;
 using LocalProgression.Component;
-using MTFO.API;
+using LocalProgression.Data;
+using System.Text;
 
 namespace LocalProgression
 {
@@ -23,17 +18,15 @@ namespace LocalProgression
 
         internal RundownManager.RundownProgData nativeProgData { get; private set; } = default;
 
-        private CM_PageRundown_New rundownPage = null;
+        private CM_PageRundown_New rundownPage = null!;
 
         private static string RundownLPDataPath(string rundownName)
         {
             char[] invalidPathChars = Path.GetInvalidPathChars();
-
             foreach (char c in invalidPathChars)
             {
                 rundownName = rundownName.Replace(c, '_');
             }
-
             return Path.Combine(DirPath, rundownName);
         }
 
@@ -64,8 +57,7 @@ namespace LocalProgression
                         dataDict[data.ExpeditionKey] = data;
                     }
                 }
-
-                catch(EndOfStreamException e)
+                catch (EndOfStreamException e)
                 {
                     // TODO: make a backup 
 
@@ -73,10 +65,9 @@ namespace LocalProgression
                     dataDict.Clear();
                     reader.Close();
                     stream.Close();
-                    
+
                     stream = File.Open(filepath, FileMode.Open);
                     reader = new BinaryReader(stream, Encoding.UTF8, false);
-
                     int dataCount = reader.ReadInt32();
                     for (int cnt = 0; cnt < dataCount; cnt++)
                     {
@@ -90,12 +81,9 @@ namespace LocalProgression
                         //data.NoBoosterAllClearCount = reader.ReadInt32();
                         dataDict[data.ExpeditionKey] = data;
                     }
-
                     reader.Close();
                     stream.Close();
-
                     File.Move(filepath, filepath + " - backup");
-
                     SaveRundownLPDataToDisk(rundownName, dataDict);
                 }
                 finally
@@ -112,13 +100,13 @@ namespace LocalProgression
 
         private void SaveRundownLPDataToDisk(string rundownName = "", Dictionary<string, ExpeditionProgressionData> dataDict = null)
         {
-            if(rundownName.Equals(""))
+            if (rundownName.Equals(""))
             {
                 rundownName = CurrentRundownPData.RundownName;
             }
 
             string filepath = RundownLPDataPath(rundownName);
-            if(dataDict == null)
+            if (dataDict == null)
             {
                 dataDict = CurrentRundownPData.LPData;
             }
@@ -193,7 +181,7 @@ namespace LocalProgression
         public void UpdateLPDataToActiveRundown()
         {
             uint rundownID = ActiveRundownID();
-            if(rundownID == 0)
+            if (rundownID == 0)
             {
                 LPLogger.Debug($"UpdateLPDataToActiveRundown: cannot find any active rundown!");
                 return;
@@ -213,7 +201,6 @@ namespace LocalProgression
             CurrentRundownPData.RundownID = rundownID;
             CurrentRundownPData.RundownName = rundownDB.name;
             CurrentRundownPData.LPData = localProgressionDataDict;
-
             foreach (var progressionData in localProgressionDataDict.Values)
             {
                 CurrentRundownPData.MainClearCount += progressionData.MainCompletionCount > 0 ? 1 : 0;
@@ -230,23 +217,19 @@ namespace LocalProgression
             {
                 Directory.CreateDirectory(DirPath);
             }
-            
             RundownManager.OnRundownProgressionUpdated += new Action(OnNativeRundownProgressionUpdated);
-
             InitConfig();
         }
 
         internal void OnNativeRundownProgressionUpdated()
         {
             UpdateLPDataToActiveRundown();
-
             if (rundownPage == null || !rundownPage.m_isActive)
             {
                 // recompute on patch - CurrentRundownPage.OnActive
                 //LPLogger.Debug("SetLocalProgressionDataToRundownPage: page is not active. Will set progression data to rundown page when page is active.");
                 return;
             }
-
             UpdateRundownPageExpeditionIconProgression();
         }
 
@@ -254,7 +237,8 @@ namespace LocalProgression
 
         private void UpdateRundownPageExpeditionIconProgression()
         {
-            if (rundownPage == null) return;
+            if (rundownPage == null) 
+                return;
 
             uint rundownID = CurrentRundownPData.RundownID;
             if (rundownID == 0)
@@ -265,10 +249,10 @@ namespace LocalProgression
 
             RundownDataBlock block = GameDataBlockBase<RundownDataBlock>.GetBlock(rundownID);
             LPLogger.Log($"CM_PageRundown_New.UpdateRundownExpeditionProgression, overwrite with LocalProgression Data, RundownID {CurrentRundownPData.RundownID}");
-            
+
             nativeProgData = ComputeLocalProgressionDataToRundownProgData();
 
-            if(rundownPage.m_tierMarker1 != null)
+            if (rundownPage.m_tierMarker1 != null)
             {
                 rundownPage.m_tierMarker1.SetProgression(nativeProgData, new RundownTierProgressionData());
                 if (rundownPage.m_expIconsTier1 != null)
@@ -303,7 +287,13 @@ namespace LocalProgression
                     UpdateTierIconsWithProgression(rundownPage.m_expIconsTier5, rundownPage.m_tierMarker5, nativeProgData.tierEUnlocked && block.UseTierUnlockRequirements);
             }
 
-            if(rundownPage.m_tierMarkerSectorSummary != null)
+            if (rundownPage.m_expIconsTierExt != null)
+            {
+                // ext tier has no tier markers
+                UpdateTierIconsWithProgression(rundownPage.m_expIconsTierExt, null, true);
+            }
+
+            if (rundownPage.m_tierMarkerSectorSummary != null)
             {
                 rundownPage.m_tierMarkerSectorSummary.SetSectorIconTextForMain($"<color=orange>[{nativeProgData.clearedMain}/{nativeProgData.totalMain}]</color>");
                 rundownPage.m_tierMarkerSectorSummary.SetSectorIconTextForSecondary($"<color=orange>[{nativeProgData.clearedSecondary}/{nativeProgData.totalSecondary}]</color>");
@@ -315,9 +305,9 @@ namespace LocalProgression
                     if (TryGetRundownConfig(rundownID, out var conf))
                     {
                         int totalClearCount = conf.ComputeNoBoosterClearPossibleCount();
-                        if(conf.EnableNoBoosterUsedProgressionForRundown || totalClearCount > 0)
+                        if (conf.EnableNoBoosterUsedProgressionForRundown || totalClearCount > 0)
                         {
-                            if(conf.EnableNoBoosterUsedProgressionForRundown)
+                            if (conf.EnableNoBoosterUsedProgressionForRundown)
                             {
                                 totalClearCount = nativeProgData.totalMain;
                             }
@@ -334,7 +324,7 @@ namespace LocalProgression
             }
         }
 
-        private void UpdateTierIconsWithProgression(Il2CppSystem.Collections.Generic.List<CM_ExpeditionIcon_New> tierIcons, CM_RundownTierMarker tierMarker, bool thisTierUnlocked) 
+        private void UpdateTierIconsWithProgression(Il2CppSystem.Collections.Generic.List<CM_ExpeditionIcon_New> tierIcons, CM_RundownTierMarker tierMarker, bool thisTierUnlocked)
         {
             if (tierIcons == null || tierIcons.Count == 0)
             {
@@ -409,7 +399,7 @@ namespace LocalProgression
         {
             RundownManager.RundownProgData rundownProgData = new RundownManager.RundownProgData();
 
-            if(CurrentRundownPData.RundownID == 0)
+            if (CurrentRundownPData.RundownID == 0)
             {
                 LPLogger.Error($"ComputeLocalProgressionDataToRundownProgData: rundown_id == 0...");
                 return rundownProgData;
@@ -440,7 +430,7 @@ namespace LocalProgression
         {
             var expeditionList = rundownDB.TierA; // assign TierA first, to get rid of that fking il2cpp list type specification
 
-            switch(tier)
+            switch (tier)
             {
                 case eRundownTier.TierA: break;
                 case eRundownTier.TierB: expeditionList = rundownDB.TierB; break;
@@ -454,7 +444,7 @@ namespace LocalProgression
             foreach (var exp in expeditionList)
             {
                 if (!exp.Enabled) continue;
-                
+
                 if (exp.HideOnLocked) // R8 update
                 {
                     bool unlocked = CheckExpeditionUnlocked(exp, tier);
@@ -476,7 +466,7 @@ namespace LocalProgression
         private bool CheckTierUnlocked(eRundownTier tier)
         {
             var rundownDB = RundownDataBlock.GetBlock(CurrentRundownPData.RundownID);
-            RundownTierProgressionData reqToReach = null;
+            RundownTierProgressionData reqToReach = null!;
             switch (tier)
             {
                 case eRundownTier.TierA: return true;
@@ -506,7 +496,6 @@ namespace LocalProgression
                     return CheckTierUnlocked(tier);
 
                 case eExpeditionAccessibility.UseCustomProgressionLock:
-
                     RundownTierProgressionData reqToReach = expedition.CustomProgressionLock;
                     return CurrentRundownPData.MainClearCount >= reqToReach.MainSectors
                         && CurrentRundownPData.SecondaryClearCount >= reqToReach.SecondarySectors
@@ -516,7 +505,6 @@ namespace LocalProgression
                 case eExpeditionAccessibility.UnlockedByExpedition:
                     var req = expedition.UnlockedByExpedition;
                     string expeditionKey = RundownManager.GetRundownProgressionExpeditionKey(req.Tier, (int)req.Exp);
-
                     return CurrentRundownPData.LPData.ContainsKey(expeditionKey);
 
                 default:
@@ -526,52 +514,54 @@ namespace LocalProgression
         }
 
         // unused because it's fucked up (probably because of 'Seralizable')
-        private void SetNativeRundownProgression()
-        {
-            var rundownProgressionData = RundownManager.RundownProgression.Expeditions;
-            if (rundownProgressionData.Count > 0)
-            {
-                LPLogger.Warning($"Non-empty native rundown progression data! RundownID: {CurrentRundownPData.RundownID}");
-                rundownProgressionData.Clear();
-            }
+        //private void SetNativeRundownProgression()
+        //{
+        //    var rundownProgressionData = RundownManager.RundownProgression.Expeditions;
+        //    if (rundownProgressionData.Count > 0)
+        //    {
+        //        LPLogger.Warning($"Non-empty native rundown progression data! RundownID: {CurrentRundownPData.RundownID}");
+        //        rundownProgressionData.Clear();
+        //    }
 
-            var dataDict = CurrentRundownPData.LPData;
-            foreach (string expeditonKey in dataDict.Keys)
-            {
-                RundownProgression.Expedition expeditionData = new();
-                var expeditionLocalData = dataDict[expeditonKey];
+        //    var dataDict = CurrentRundownPData.LPData;
+        //    foreach (string expeditonKey in dataDict.Keys)
+        //    {
+        //        RundownProgression.Expedition expeditionData = new();
+        //        var expeditionLocalData = dataDict[expeditonKey];
 
-                expeditionData.AllLayerCompletionCount = expeditionLocalData.AllClearCount;
-                expeditionData.Layers = new();
+        //        expeditionData.AllLayerCompletionCount = expeditionLocalData.AllClearCount;
+        //        expeditionData.Layers = new();
 
-                RundownProgression.Expedition.Layer mainLayer, secondaryLayer, thirdLayer;
+        //        RundownProgression.Expedition.Layer mainLayer, secondaryLayer, thirdLayer;
 
-                mainLayer.CompletionCount = expeditionLocalData.MainCompletionCount;
-                mainLayer.State = expeditionLocalData.MainCompletionCount > 0 ? LayerProgressionState.Completed : LayerProgressionState.Undiscovered;
+        //        mainLayer.CompletionCount = expeditionLocalData.MainCompletionCount;
+        //        mainLayer.State = expeditionLocalData.MainCompletionCount > 0 ? LayerProgressionState.Completed : LayerProgressionState.Undiscovered;
 
-                secondaryLayer.CompletionCount = expeditionLocalData.SecondaryCompletionCount;
-                secondaryLayer.State = expeditionLocalData.SecondaryCompletionCount > 0 ? LayerProgressionState.Completed : LayerProgressionState.Undiscovered;
+        //        secondaryLayer.CompletionCount = expeditionLocalData.SecondaryCompletionCount;
+        //        secondaryLayer.State = expeditionLocalData.SecondaryCompletionCount > 0 ? LayerProgressionState.Completed : LayerProgressionState.Undiscovered;
 
-                thirdLayer.CompletionCount = expeditionLocalData.ThirdCompletionCount;
-                thirdLayer.State = expeditionLocalData.ThirdCompletionCount > 0 ? LayerProgressionState.Completed : LayerProgressionState.Undiscovered;
+        //        thirdLayer.CompletionCount = expeditionLocalData.ThirdCompletionCount;
+        //        thirdLayer.State = expeditionLocalData.ThirdCompletionCount > 0 ? LayerProgressionState.Completed : LayerProgressionState.Undiscovered;
 
-                expeditionData.Layers.SetLayer(ExpeditionLayers.Main, mainLayer);
-                expeditionData.Layers.SetLayer(ExpeditionLayers.Secondary, secondaryLayer);
-                expeditionData.Layers.SetLayer(ExpeditionLayers.Third, thirdLayer);
+        //        expeditionData.Layers.SetLayer(ExpeditionLayers.Main, mainLayer);
+        //        expeditionData.Layers.SetLayer(ExpeditionLayers.Secondary, secondaryLayer);
+        //        expeditionData.Layers.SetLayer(ExpeditionLayers.Third, thirdLayer);
 
-                LPLogger.Warning($"{mainLayer.CompletionCount}, {secondaryLayer.CompletionCount}, {thirdLayer.CompletionCount}");
+        //        LPLogger.Warning($"{mainLayer.CompletionCount}, {secondaryLayer.CompletionCount}, {thirdLayer.CompletionCount}");
 
-                rundownProgressionData[expeditonKey] = expeditionData;
-            }
-        }
+        //        rundownProgressionData[expeditonKey] = expeditionData;
+        //    }
+        //}
 
         public bool AllSectorCompletedWithoutBoosterAndCheckpoint()
         {
             bool hasSecondary = RundownManager.HasSecondaryLayer(RundownManager.ActiveExpedition);
-            if (hasSecondary && WardenObjectiveManager.CurrentState.second_status != eWardenObjectiveStatus.WardenObjectiveItemSolved) return false;
-                
+            if (hasSecondary && WardenObjectiveManager.CurrentState.second_status != eWardenObjectiveStatus.WardenObjectiveItemSolved) 
+                return false;
+
             bool hasThird = RundownManager.HasThirdLayer(RundownManager.ActiveExpedition);
-            if (hasThird && WardenObjectiveManager.CurrentState.second_status != eWardenObjectiveStatus.WardenObjectiveItemSolved) return false; 
+            if (hasThird && WardenObjectiveManager.CurrentState.second_status != eWardenObjectiveStatus.WardenObjectiveItemSolved) 
+                return false;
 
             bool isClearedWithNoBosster = CheckpointManager.CheckpointUsage == 0;
             if (isClearedWithNoBosster)
@@ -596,12 +586,10 @@ namespace LocalProgression
         public uint ActiveRundownID()
         {
             var rundownKey = RundownManager.ActiveRundownKey;
-
             if (!RundownManager.TryGetIdFromLocalRundownKey(rundownKey, out var rundownID) || rundownID == 0u)
             {
                 return 0u;
             }
-
             return rundownID;
         }
 
@@ -618,10 +606,10 @@ namespace LocalProgression
                 if (rundownDB == null)
                 {
                     LPLogger.Error($"Didn't find Rundown Datablock with rundown id {RundownID}");
-                    
+
                     return EmptyProgression;
                 }
-                
+
                 localProgressionDataDict = ReadRundownLPData(rundownDB.name);
             }
             else
@@ -630,7 +618,7 @@ namespace LocalProgression
             }
 
             string expKey = ExpeditionKey(tier, expIndex);
-            if (localProgressionDataDict.TryGetValue(expKey, out var data)) 
+            if (localProgressionDataDict.TryGetValue(expKey, out var data))
             {
                 return data;
             }
@@ -638,8 +626,8 @@ namespace LocalProgression
             return EmptyProgression;
         }
 
-        static LocalProgressionManager() {}
+        static LocalProgressionManager() { }
 
-        private LocalProgressionManager() {}
+        private LocalProgressionManager() { }
     }
 }

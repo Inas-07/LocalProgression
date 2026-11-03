@@ -18,10 +18,10 @@ namespace LocalProgression.Patches
             if (__instance.Status == eExpeditionIconStatus.LockedAndScrambled) return;
 
             var rundownID = LocalProgressionManager.Current.ActiveRundownID();
-            if (LocalProgressionManager.Current.TryGetRundownConfig(rundownID, out var rundownDef) 
-                && rundownDef.EnableNoBoosterUsedProgressionForRundown 
-                || 
-                LocalProgressionManager.Current.TryGetExpeditionConfig(rundownID, __instance.Tier, __instance.ExpIndex, out var expDef) 
+            if (LocalProgressionManager.Current.TryGetRundownConfig(rundownID, out var rundownDef)
+                && rundownDef.EnableNoBoosterUsedProgressionForRundown
+                ||
+                LocalProgressionManager.Current.TryGetExpeditionConfig(rundownID, __instance.Tier, __instance.ExpIndex, out var expDef)
                 && expDef.EnableNoBoosterUsedProgression)
             {
                 var lpData = LocalProgressionManager.Current.GetExpeditionLP(rundownID, __instance.Tier, __instance.ExpIndex);

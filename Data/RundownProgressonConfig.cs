@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace LocalProgression.Data
+﻿namespace LocalProgression.Data
 {
     public class ExpeditionProgressionConfig
     {
@@ -12,7 +9,7 @@ namespace LocalProgression.Data
         public bool EnableNoBoosterUsedProgression { get; set; } = false;
     }
 
-    public class RundownConfig 
+    public class RundownConfig
     {
         public uint RundownID { get; set; } = 0u;
 

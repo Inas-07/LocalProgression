@@ -1,6 +1,5 @@
 ﻿using CellMenu;
 using HarmonyLib;
-using LocalProgression.Component;
 
 namespace LocalProgression.Patches
 {

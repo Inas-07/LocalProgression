@@ -1,5 +1,4 @@
-﻿using System.IO;
-using LocalProgression.Data;
+﻿using LocalProgression.Data;
 using MTFO.API;
 
 namespace LocalProgression
@@ -16,12 +15,12 @@ namespace LocalProgression
 
         private void InitConfig()
         {
-            if(!Directory.Exists(LP_CONFIG_DIR)) 
+            if (!Directory.Exists(LP_CONFIG_DIR))
             {
                 Directory.CreateDirectory(LP_CONFIG_DIR);
             }
 
-            if(!File.Exists(CONFIG_PATH))
+            if (!File.Exists(CONFIG_PATH))
             {
                 var file = File.CreateText(CONFIG_PATH);
                 file.WriteLine(JSON.Serialize(new RundownProgressonConfig()));
@@ -30,7 +29,7 @@ namespace LocalProgression
 
                 RundownProgressonConfig = new();
             }
-            
+
             ReloadConfig();
             RundownManager.OnRundownProgressionUpdated += new System.Action(ReloadConfig);
         }
@@ -50,17 +49,17 @@ namespace LocalProgression
 
         public bool TryGetRundownConfig(uint RundownID, out RundownConfig rundownConf)
         {
-            rundownConf = RundownProgressonConfig.Configs.Find(rundownConf => rundownConf.RundownID == RundownID);
+            rundownConf = RundownProgressonConfig.Configs.Find(rundownConf => rundownConf.RundownID == RundownID)!;
             return rundownConf != null;
         }
 
 
         public bool TryGetExpeditionConfig(uint RundownID, eRundownTier tier, int expIndex, out ExpeditionProgressionConfig expConf)
         {
-            expConf = null;
-            if(TryGetRundownConfig(RundownID, out var rundownConf))
+            expConf = null!;
+            if (TryGetRundownConfig(RundownID, out var rundownConf))
             {
-                expConf = rundownConf.Expeditions.Find(e => e.Tier == tier && e.ExpeditionIndex == expIndex);
+                expConf = rundownConf.Expeditions.Find(e => e.Tier == tier && e.ExpeditionIndex == expIndex)!;
             }
             return expConf != null;
         }
