@@ -64,19 +64,16 @@ namespace LocalProgression
                         dataDict[data.ExpeditionKey] = data;
                     }
                 }
-
-                catch(EndOfStreamException e)
+                catch (EndOfStreamException e)
                 {
-                    // TODO: make a backup 
-
                     LPLogger.Warning("Upgrading data format to latest LocalProgression version!");
                     dataDict.Clear();
                     reader.Close();
                     stream.Close();
-                    
+
+                    var nbsClearDict = ReadNBSClearData(filepath + " - NBSClear"); // get no-booster count from split file
                     stream = File.Open(filepath, FileMode.Open);
                     reader = new BinaryReader(stream, Encoding.UTF8, false);
-
                     int dataCount = reader.ReadInt32();
                     for (int cnt = 0; cnt < dataCount; cnt++)
                     {
@@ -86,16 +83,18 @@ namespace LocalProgression
                         data.MainCompletionCount = reader.ReadInt32();
                         data.SecondaryCompletionCount = reader.ReadInt32();
                         data.ThirdCompletionCount = reader.ReadInt32();
-                        data.AllClearCount = reader.ReadInt32(); // TODO: load and save?
-                        //data.NoBoosterAllClearCount = reader.ReadInt32();
+                        data.AllClearCount = reader.ReadInt32();
+                        if (nbsClearDict.TryGetValue(data.ExpeditionKey, out int nbsClearCount))
+                            data.NoBoosterAllClearCount = nbsClearCount;
                         dataDict[data.ExpeditionKey] = data;
                     }
-
                     reader.Close();
                     stream.Close();
 
-                    File.Move(filepath, filepath + " - backup");
-
+                    string backupPath = filepath + " - backup";
+                    if (File.Exists(backupPath))
+                        backupPath += $"_{DateTime.Now:yyyyMMdd_HHmmss}";
+                    File.Move(filepath, backupPath);
                     SaveRundownLPDataToDisk(rundownName, dataDict);
                 }
                 finally
@@ -106,6 +105,36 @@ namespace LocalProgression
             }
 
             return dataDict;
+        }
+
+        private static Dictionary<string, int> ReadNBSClearData(string nbsFilepath)
+        {
+            var result = new Dictionary<string, int>();
+            if (!File.Exists(nbsFilepath))
+                return result;
+
+            var stream = File.Open(nbsFilepath, FileMode.Open);
+            var reader = new BinaryReader(stream, Encoding.UTF8, false);
+            try
+            {
+                int count = reader.ReadInt32();
+                for (int i = 0; i < count; i++)
+                {
+                    string key = reader.ReadString();
+                    result[key] = reader.ReadInt32();
+                }
+            }
+            catch
+            {
+                result.Clear();
+            }
+            finally
+            {
+                reader.Close();
+                stream.Close();
+            }
+
+            return result;
         }
 
         internal RundownProgressionData GetLPDataForCurrentRundown() => CurrentRundownPData;
