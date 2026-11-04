@@ -303,7 +303,13 @@ namespace LocalProgression
                     UpdateTierIconsWithProgression(rundownPage.m_expIconsTier5, rundownPage.m_tierMarker5, nativeProgData.tierEUnlocked && block.UseTierUnlockRequirements);
             }
 
-            if(rundownPage.m_tierMarkerSectorSummary != null)
+            if (rundownPage.m_expIconsTierExt != null)
+            {
+                // ext tier has no tier markers
+                UpdateTierIconsWithProgression(rundownPage.m_expIconsTierExt, null, true);
+            }
+
+            if (rundownPage.m_tierMarkerSectorSummary != null)
             {
                 rundownPage.m_tierMarkerSectorSummary.SetSectorIconTextForMain($"<color=orange>[{nativeProgData.clearedMain}/{nativeProgData.totalMain}]</color>");
                 rundownPage.m_tierMarkerSectorSummary.SetSectorIconTextForSecondary($"<color=orange>[{nativeProgData.clearedSecondary}/{nativeProgData.totalSecondary}]</color>");
