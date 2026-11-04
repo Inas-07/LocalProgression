@@ -1,56 +1,67 @@
 ﻿using BepInEx.Logging;
+using UnityEngine;
 namespace LocalProgression
 {
     internal static class LPLogger
     {
-        public static ManualLogSource Logger { get; internal set; } = null!;
+        private static ManualLogSource logger = BepInEx.Logging.Logger.CreateLogSource("LocalProgression");
 
         public static void Log(string format, params object[] args)
         {
-            Log(string.Format(format, args));
+            LPLogger.Log(string.Format(format, args));
         }
 
         public static void Log(string str)
         {
-            if (Logger == null) return;
+            if (logger == null) return;
 
-            Logger.Log(LogLevel.Message, str);
+            logger.Log(LogLevel.Message, str);
         }
 
         public static void Warning(string format, params object[] args)
         {
-            Warning(string.Format(format, args));
+            LPLogger.Warning(string.Format(format, args));
         }
 
         public static void Warning(string str)
         {
-            if (Logger == null) return;
+            if (logger == null) return;
 
-            Logger.Log(LogLevel.Warning, str);
+            logger.Log(LogLevel.Warning, str);
         }
 
         public static void Error(string format, params object[] args)
         {
-            Error(string.Format(format, args));
+            LPLogger.Error(string.Format(format, args));
         }
 
         public static void Error(string str)
         {
-            if (Logger == null) return;
+            if (logger == null) return;
 
-            Logger.Log(LogLevel.Error, str);
+            logger.Log(LogLevel.Error, str);
         }
 
         public static void Debug(string format, params object[] args)
         {
-            Debug(string.Format(format, args));
+            LPLogger.Debug(string.Format(format, args));
         }
 
         public static void Debug(string str)
         {
-            if (Logger == null) return;
+            if (logger == null) return;
 
-            Logger.Log(LogLevel.Debug, str);
+            logger.Log(LogLevel.Debug, str);
+        }
+    }
+
+    public static class Utils
+    {
+        public static bool TryGetComponent<T>(this GameObject obj, out T comp)
+        {
+            comp = obj.GetComponent<T>();
+            return comp != null;
         }
     }
 }
+

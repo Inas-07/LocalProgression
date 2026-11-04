@@ -1,9 +1,10 @@
 ﻿using CellMenu;
-using GameData;
 using GTFO.API;
-using Il2CppInterop.Runtime.Injection;
-using TMPro;
 using UnityEngine;
+using Il2CppInterop.Runtime.Injection;
+using BoosterImplants;
+using TMPro;
+using GameData;
 
 namespace LocalProgression.Component
 {
@@ -23,7 +24,7 @@ namespace LocalProgression.Component
 
         internal void Setup()
         {
-            if (m_page == null)
+            if(m_page == null)
             {
                 LPLogger.Error("ExpeditionSuccess_NoBooster: Assign the page instance before setup");
                 return;
@@ -31,10 +32,9 @@ namespace LocalProgression.Component
 
             if (m_completeWithNoBoosterIcon != null) return;
 
-            if (Assets.NoBoosterIcon == null)
+            if(Assets.NoBoosterIcon == null)
             {
-                AssetAPI.OnAssetBundlesLoaded += () =>
-                {
+                AssetAPI.OnAssetBundlesLoaded += () => {
                     LoadAsset();
                     AssetAPI.OnAssetBundlesLoaded -= LoadAsset;
                 };
@@ -61,9 +61,9 @@ namespace LocalProgression.Component
             m_bg = Wrapper.BGGO.GetComponent<SpriteRenderer>();
             m_icon = Wrapper.IconGO.GetComponent<SpriteRenderer>();
 
-            m_title = UnityEngine.Object.Instantiate(m_page.m_sectorIconMain.m_title);
+            m_title = Object.Instantiate(m_page.m_sectorIconMain.m_title);
             m_title.transform.SetParent(Wrapper.ObjectiveIcon.transform, false);
-            m_rightSideText = UnityEngine.Object.Instantiate(m_page.m_sectorIconMain.m_rightSideText);
+            m_rightSideText = Object.Instantiate(m_page.m_sectorIconMain.m_rightSideText);
             m_rightSideText.transform.SetParent(Wrapper.RightSideText.transform, false);
 
             m_completeWithNoBoosterIcon.m_title = m_title;
@@ -79,10 +79,10 @@ namespace LocalProgression.Component
             uint rundownID = LocalProgressionManager.Current.ActiveRundownID();
             var expData = RundownManager.GetActiveExpeditionData();
             if (!(
-                LocalProgressionManager.Current.TryGetRundownConfig(rundownID, out var rundownConf)
-                && rundownConf.EnableNoBoosterUsedProgressionForRundown
+                LocalProgressionManager.Current.TryGetRundownConfig(rundownID, out var rundownConf) 
+                && rundownConf.EnableNoBoosterUsedProgressionForRundown 
                 ||
-                LocalProgressionManager.Current.TryGetExpeditionConfig(rundownID, expData.tier, expData.expeditionIndex, out var conf)
+                LocalProgressionManager.Current.TryGetExpeditionConfig(rundownID, expData.tier, expData.expeditionIndex, out var conf) 
                 && conf.EnableNoBoosterUsedProgression))
             {
                 return;
@@ -96,8 +96,8 @@ namespace LocalProgression.Component
             bool hasThird = RundownManager.HasThirdLayer(RundownManager.ActiveExpedition);
             positionIndex += hasSecondary ? 1 : 0;
             positionIndex += hasThird ? 1 : 0;
-            positionIndex +=
-                hasSecondary && WardenObjectiveManager.CurrentState.second_status == eWardenObjectiveStatus.WardenObjectiveItemSolved
+            positionIndex += 
+                hasSecondary && WardenObjectiveManager.CurrentState.second_status == eWardenObjectiveStatus.WardenObjectiveItemSolved 
                 && hasThird && WardenObjectiveManager.CurrentState.second_status == eWardenObjectiveStatus.WardenObjectiveItemSolved ? 1 : 0;
 
             float delay = m_page.m_time_sectorIcon + positionIndex * 0.7f;
@@ -118,8 +118,8 @@ namespace LocalProgression.Component
             icon.SetupIcon(icon.m_iconFinishedAllSkull, icon.m_iconFinishedAllBG, false, false, 0.5f);
             var cIcon = m_icon.color;
             var cBg = m_bg.color;
-            m_icon.color = new(cIcon.r, cIcon.g, cIcon.b, boosterUnused ? 1f : 0.4f);
-            m_bg.color = new(cBg.r, cBg.g, cBg.b, boosterUnused ? 1f : 0.3f);
+            m_icon.color = new(cIcon.r, cIcon.g, cIcon.b, boosterUnused ? 1.0f : 0.4f);
+            m_bg.color = new(cBg.r, cBg.g, cBg.b, boosterUnused ? 1.0f : 0.3f);
             m_title.alpha = (boosterUnused ? 1f : 0.2f);
 
             icon.m_titleVisible = true;
@@ -139,7 +139,7 @@ namespace LocalProgression.Component
             icon.m_rightSideText.gameObject.SetActive(false);
 
             var text_db = GameDataBlockBase<TextDataBlock>.GetBlock("InGame.ExpeditionSuccessPage.AllClearWithNoBoosterUsed");
-            if (text_db != null)
+            if(text_db != null)
             {
                 icon.m_title.SetText(Localization.Text.Get(text_db.persistentID));
             }

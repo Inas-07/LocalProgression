@@ -1,4 +1,10 @@
-﻿using UnityEngine;
+﻿using GTFO.API;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using UnityEngine;
 
 namespace LocalProgression.Component
 {
@@ -19,15 +25,15 @@ namespace LocalProgression.Component
         public GameObject TitleGO => ObjectiveIcon?.transform.GetChild(1).gameObject;
 
         public GameObject RightSideText => GameObject?.transform.GetChild(2).gameObject;
-
-        public NoBoosterIconGOWrapper(GameObject iconGO)
-        {
+    
+        public NoBoosterIconGOWrapper(GameObject iconGO) 
+        { 
             GameObject = iconGO;
         }
 
         public void Destory()
         {
-            if (GameObject != null)
+            if(GameObject != null) 
             {
                 GameObject.Destroy(GameObject);
             }

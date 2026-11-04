@@ -1,13 +1,21 @@
-﻿using CellMenu;
+﻿using BoosterImplants;
+using CellMenu;
 using GameData;
 using GTFO.API;
 using Il2CppInterop.Runtime.Injection;
+using MS.Internal.Xml.XPath;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements.UIR;
 
 namespace LocalProgression.Component
 {
-    internal class ExpeditionWindow_NoBoosterIcon : MonoBehaviour
+    internal class ExpeditionWindow_NoBoosterIcon: MonoBehaviour
     {
         internal CM_ExpeditionWindow m_window;
         private CM_ExpeditionSectorIcon m_completeWithNoBoosterIcon = null;
@@ -29,8 +37,7 @@ namespace LocalProgression.Component
 
             if (Assets.NoBoosterIcon == null)
             {
-                AssetAPI.OnAssetBundlesLoaded += () =>
-                {
+                AssetAPI.OnAssetBundlesLoaded += () => {
                     LoadAsset();
                     AssetAPI.OnAssetBundlesLoaded -= LoadAsset;
                 };
@@ -68,6 +75,8 @@ namespace LocalProgression.Component
             m_completeWithNoBoosterIcon.SortAsPopupLayer();
 
             m_completeWithNoBoosterIcon.m_root = m_window.m_root;
+
+
         }
 
         internal void SetVisible(bool visible)
@@ -91,18 +100,18 @@ namespace LocalProgression.Component
             icon.SetupIcon(icon.m_iconSecondarySkull, icon.m_iconSecondaryBG, false);
             icon.SetupIcon(icon.m_iconThirdSkull, icon.m_iconThirdBG, false);
             icon.SetupIcon(icon.m_iconFinishedAllSkull, icon.m_iconFinishedAllBG, false, false, 0.5f);
-            //icon.SetupIcon(m_icon, m_bg, true, boosterUnused, 1f, 1f);
+            //icon.SetupIcon(m_icon, m_bg, true, boosterUnused, 1.0f, 1.0f);
             var cIcon = m_icon.color;
             var cBg = m_bg.color;
-            m_icon.color = new(cIcon.r, cIcon.g, cIcon.b, boosterUnused ? 1f : 0.4f);
-            m_bg.color = new(cBg.r, cBg.g, cBg.b, boosterUnused ? 1f : 0.3f);
+            m_icon.color = new(cIcon.r, cIcon.g, cIcon.b, boosterUnused ? 1.0f : 0.4f);
+            m_bg.color = new(cBg.r, cBg.g, cBg.b, boosterUnused ? 1.0f : 0.3f);
             m_title.alpha = (boosterUnused ? 1f : 0.2f);
 
             icon.m_titleVisible = true;
             icon.m_isCleared = boosterUnused;
 
             // blink in sound control
-            if (boosterUnused)
+            if(boosterUnused)
             {
                 icon.m_isFinishedAll = true;
             }
