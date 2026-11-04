@@ -577,7 +577,7 @@ namespace LocalProgression
             if (hasSecondary && WardenObjectiveManager.CurrentState.second_status != eWardenObjectiveStatus.WardenObjectiveItemSolved) return false;
                 
             bool hasThird = RundownManager.HasThirdLayer(RundownManager.ActiveExpedition);
-            if (hasThird && WardenObjectiveManager.CurrentState.second_status != eWardenObjectiveStatus.WardenObjectiveItemSolved) return false; 
+            if (hasThird && WardenObjectiveManager.CurrentState.third_status != eWardenObjectiveStatus.WardenObjectiveItemSolved) return false; 
 
             bool isClearedWithNoBosster = CheckpointManager.CheckpointUsage == 0;
             if (isClearedWithNoBosster)
